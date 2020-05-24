@@ -120,7 +120,6 @@ def printRowsInTable(finalTable):
         log.truncate()
 
     for row in finalTable:
-        print(row)
         print(row, file=open('log.txt', 'a'))
 
 
