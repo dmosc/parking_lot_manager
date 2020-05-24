@@ -9,6 +9,7 @@ class ParkingLot:
     in_doors = []
     out_doors = []
     threads = []
+    log = [['Timestamp', 'Command', 'Log', 'Available spots']]
 
     def __init__(self, in_doors, out_doors):
         self.is_open = False

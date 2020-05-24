@@ -116,8 +116,12 @@ def createRowUnderFields(largestElementLength, cols, finalTable):
 
 def printRowsInTable(finalTable):
     # For each row - print it
+    with open('log.txt', 'w') as log:
+        log.truncate()
+
     for row in finalTable:
         print(row)
+        print(row, file=open('log.txt', 'a'))
 
 
 def printTable(matrix, useFieldNames=False, color=None):
