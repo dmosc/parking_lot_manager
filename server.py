@@ -1,4 +1,5 @@
 import socket
+
 from classes import Request, ParkingLot
 from utils import TableIt, constants, functions
 
@@ -50,12 +51,28 @@ while True:
                         parking_lot.log.append([request.time, decoded_payload, '', parking_lot.spots._value])
                     else:
                         print('Door #%s is not valid!' % str(request.door))
-                        parking_lot.log.append([request.time, '', 'Door #%s is not valid!' % str(request.door), parking_lot.spots._value])
+                        parking_lot.log.append(
+                            [request.time, '', 'Door #%s is not valid!' % str(request.door), parking_lot.spots._value])
                 else:
                     print('❌  Parking lot is not open yet!')
                     parking_lot.log.append(['', '', '❌  Parking lot is not open yet!', parking_lot.spots._value])
+            else:
+                break
     finally:
         TableIt.printTable(parking_lot.log, useFieldNames=True)
         print('✅  Closing socket...')
         connection.close()
 
+    break
+
+# Cleanup and join threads
+for entrance in parking_lot.in_doors:
+    entrance.request_queue.join()
+    entrance.request_queue.put(None)
+
+for entrance in parking_lot.out_doors:
+    entrance.request_queue.join()
+    entrance.request_queue.put(None)
+
+for thread in parking_lot.threads:
+    thread.join()
