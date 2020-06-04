@@ -5,6 +5,7 @@ from utils import constants
 class Request:
     def __init__(self, data, opened_at):
         request = data.split(' ')
+        print(request)
         self.time = int(round(time.time() - (opened_at if opened_at is not None else 0)))
         self.operation = request[0]
 

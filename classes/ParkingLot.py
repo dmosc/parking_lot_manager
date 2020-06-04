@@ -5,11 +5,12 @@ from classes import Entrance
 class ParkingLot:
     is_open = False
     opened_at = 0
+    busy_spots = 0
     spots = threading.BoundedSemaphore(0)
     in_doors = []
     out_doors = []
     threads = []
-    log = [['Timestamp', 'Command', 'Log', 'Available spots']]
+    log = [['Timestamp', 'Command', 'Log', 'Available spots', 'Busy spots']]
 
     def __init__(self, in_doors, out_doors):
         self.is_open = False
@@ -18,6 +19,7 @@ class ParkingLot:
     def open(self, request):
         self.is_open = True
         self.opened_at = int(round(time.time()))
+        self.busy_spots = 0
         self.spots = threading.BoundedSemaphore(int(request.spots))
         self.init_doors(request.in_doors, request.out_doors)
 

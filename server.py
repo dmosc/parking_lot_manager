@@ -24,7 +24,7 @@ while True:
     print(client_address)
     try:
         while True:
-            payload = connection.recv(30)
+            payload = connection.recv(256)
             decoded_payload = payload.decode()
             if len(decoded_payload) > 0:
                 request = Request.Request(decoded_payload, opened_at)
@@ -34,7 +34,7 @@ while True:
                     opened_at = parking_lot.opened_at
                 elif request.operation == constants.CLOSING:
                     parking_lot.close()
-                    parking_lot.log.append([request.time, decoded_payload, '', parking_lot.spots._value])
+                    parking_lot.log.append([request.time, decoded_payload, '', parking_lot.spots._value, parking_lot.busy_spots])
                     break
 
                 if parking_lot.is_open:
@@ -48,14 +48,14 @@ while True:
                             parking_lot.in_doors[int(request.door) - 1].request_queue.put(request)
                         elif door_type == 1:
                             parking_lot.out_doors[int(request.door) - 1].request_queue.put(request)
-                        parking_lot.log.append([request.time, decoded_payload, '', parking_lot.spots._value])
+                        parking_lot.log.append([request.time, decoded_payload, '', parking_lot.spots._value, parking_lot.busy_spots])
                     else:
                         print('Door #%s is not valid!' % str(request.door))
                         parking_lot.log.append(
-                            [request.time, '', 'Door #%s is not valid!' % str(request.door), parking_lot.spots._value])
+                            [request.time, '', 'Door #%s is not valid!' % str(request.door), parking_lot.spots._value, parking_lot.busy_spots])
                 else:
                     print('❌  Parking lot is not open yet!')
-                    parking_lot.log.append(['', '', '❌  Parking lot is not open yet!', parking_lot.spots._value])
+                    parking_lot.log.append(['', '', '❌  Parking lot is not open yet!', parking_lot.spots._value, parking_lot.busy_spots])
             else:
                 break
     finally:

@@ -10,11 +10,53 @@ sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 sock.connect(server_address)
 
 try:
-    while True:
-        message = input('\n⚡️  Ingrese entrada: ')
-        if not message:
-            break
-        sock.sendall(message.encode())
+    messages = ['0.00 apertura 2 2 1',
+                '1.00 oprimeBoton 1',
+                '27.00 meteTarjeta 1 1',
+                '44.00 oprimeBoton 1',
+                '44.00 oprimeBoton 2',
+                '51.00 recogeTarjeta 1',
+                '51.00 recogeTarjeta 2',
+                '58.00 laserOffE 1',
+                '58.00 laserOffE 2',
+                '59.00 laserOnE 1',
+                '59.00 laserOnE 2',
+                '66.00 oprimeBoton 1',
+                '71.00 oprimeBoton 1',
+                '73.00 meteTarjeta 1 1',
+                '82.00 oprimeBoton 1',
+                '96.00 laserOnE 1',
+                '97.00 meteTarjeta 1 1',
+                '110.00 cierre']
+    # messages_eng = ['0.00 opening 2 2 1',
+    #             '1.00 button_press 1',
+    #             '27.00 insert_ticket 1 1',
+    #             '44.00 button_press 1',
+    #             '44.00 button_press 2',
+    #             '51.00 withdraw_ticket 1',
+    #             '51.00 withdraw_ticket 2',
+    #             '58.00 laser_off_in 1',
+    #             '58.00 laser_off_in 2',
+    #             '59.00 laser_on_in 1',
+    #             '59.00 laser_on_in 2',
+    #             '66.00 button_press 1',
+    #             '71.00 button_press 1',
+    #             '73.00 insert_ticket 1 1',
+    #             '82.00 button_press 1',
+    #             '96.00 laser_on_in 1',
+    #             '97.00 insert_ticket 1 1',
+    #             '110.00 closing']
+    globalTime = 0.00
+    for message in messages:
+        timestamp = float(message[0:4])
+        payload = message[message.index(" ") + 1:]
+        toSleep = timestamp - globalTime
+        time.sleep(toSleep)
+        globalTime += toSleep
+        print('client sending "%s"' % payload)
+        print(payload)
+        sock.sendall(payload.encode())
+        # response = sock.recv(256)
 finally:
     print('✅ Closing socket...')
     sock.close()
